@@ -7,8 +7,7 @@ from app.models.base_uuid_model import BaseUUIDModel
 
 class ActivityBase(SQLModel):
     user_id: UUID = Field(foreign_key="user.id", nullable=False, index=True)
-    activity_type: UserActivityType = Field(
-        sa_column=Column(Enum(UserActivityType)))
+    activity_type: UserActivityType = Field(sa_column=Column(Enum(UserActivityType)))
     details: dict = Field(sa_column=Column(JSON), default={})
 
 

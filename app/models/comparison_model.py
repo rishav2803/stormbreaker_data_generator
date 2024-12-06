@@ -9,12 +9,9 @@ from app.models.job_model import Job
 
 class ComparisonBase(SQLModel):
     name: str = Field(index=True)
-    configuration: dict = Field(
-        sa_column=Column(JSON, nullable=False, default={}))
-    source_dataset_id: UUID = Field(
-        foreign_key="dataset.id", ondelete="CASCADE")
-    target_dataset_id: UUID = Field(
-        foreign_key="dataset.id", ondelete="CASCADE")
+    configuration: dict = Field(sa_column=Column(JSON, nullable=False, default={}))
+    source_dataset_id: UUID = Field(foreign_key="dataset.id", ondelete="CASCADE")
+    target_dataset_id: UUID = Field(foreign_key="dataset.id", ondelete="CASCADE")
     user_id: UUID | None = Field(foreign_key="user.id", nullable=True)
 
 
@@ -54,8 +51,7 @@ class Comparison(BaseUUIDModel, ComparisonBase, table=True):
 
 class ComparisonResultBase(SQLModel):
     result: dict = Field(sa_column=Column(JSON, nullable=False, default={}))
-    comparison_id: UUID = Field(
-        foreign_key="comparison.id", ondelete="CASCADE")
+    comparison_id: UUID = Field(foreign_key="comparison.id", ondelete="CASCADE")
     job_id: int = Field(foreign_key="job.id")
 
 
@@ -77,8 +73,7 @@ class ComparisonResult(BaseUUIDModel, ComparisonResultBase, table=True):
     )
 
     __table_args__ = (
-        UniqueConstraint("comparison_id", "job_id",
-                         name="unique_comparison_job"),
+        UniqueConstraint("comparison_id", "job_id", name="unique_comparison_job"),
         Index("ix_comparison_id_foreign", "comparison_id"),
     )
 
@@ -106,5 +101,4 @@ class ComparisonResultRow(BaseUUIDModel, ComparisonResultRowBase, table=True):
         sa_relationship_kwargs={"lazy": "select"},
     )
 
-    __table_args__ = (
-        Index("ix_comparison_result_id_foreign", "comparison_result_id"),)
+    __table_args__ = (Index("ix_comparison_result_id_foreign", "comparison_result_id"),)

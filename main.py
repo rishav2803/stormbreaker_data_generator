@@ -2,6 +2,8 @@ import argparse
 from app.generator.user_generator import create_user
 from app.generator.workspace_generator import create_workspace
 from app.generator.workspace_link_generator import create_workspace_link
+from app.generator.datasource_generator import create_datasource
+from app.generator.dataset_generator import create_dataset
 from app.db.database import SessionLocal
 
 
@@ -44,6 +46,12 @@ def main():
         user_id, user_role = create_user(session)
         workspace_id = create_workspace(session, user_id, user_role)
         create_workspace_link(session, user_id, workspace_id)
+        for i in range(0,num_sources):
+            datasource_id=create_datasource(session,workspace_id,user_id)
+            for j in range(0,num_data_sets):
+                create_dataset(session,datasource_id)
+
+            
         session.commit()
         print("Data Generated Sucessfully!!")
     except Exception as e:

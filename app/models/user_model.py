@@ -1,7 +1,7 @@
 from sqlmodel import JSON, Column, Enum, Field, Relationship, SQLModel
 from app.models.base_uuid_model import BaseUUIDModel
-from app.schemas.common_schema import ProviderType, UserRole, UserStatus
 from app.models.workspace_user_link_model import WorkspaceUserLink
+from app.schemas.common_schema import ProviderType, UserRole, UserStatus
 
 
 class UserBase(SQLModel):
@@ -16,8 +16,28 @@ class UserBase(SQLModel):
 class User(BaseUUIDModel, UserBase, table=True):
     __tablename__ = "user"
 
+    validations: list["Validation"] = Relationship(
+        back_populates="user",
+        sa_relationship_kwargs={"lazy": "select"},
+    )
+    invites: list["Invitation"] = Relationship(
+        back_populates="user",
+        sa_relationship_kwargs={"lazy": "select"},
+    )
     workspaces: list["Workspace"] = Relationship(
         back_populates="users",
         link_model=WorkspaceUserLink,
+        sa_relationship_kwargs={"lazy": "select"},
+    )
+    comparisons: list["Comparison"] = Relationship(
+        back_populates="user",
+        sa_relationship_kwargs={"lazy": "select"},
+    )
+    data_sources: list["DataSource"] = Relationship(
+        back_populates="user",
+        sa_relationship_kwargs={"lazy": "select"},
+    )
+    activities: list["Activity"] = Relationship(
+        back_populates="user",
         sa_relationship_kwargs={"lazy": "select"},
     )

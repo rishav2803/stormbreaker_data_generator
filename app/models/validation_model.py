@@ -25,8 +25,7 @@ class ValidationBase(SQLModel):
     auto_status: str | None = Field(
         sa_column=SqlColumn(Enum(AutoStatus), nullable=True)
     )
-    category: str = Field(sa_column=SqlColumn(
-        Enum(ValidationCategory), nullable=False))
+    category: str = Field(sa_column=SqlColumn(Enum(ValidationCategory), nullable=False))
     dataset_id: UUID | None = Field(
         foreign_key="dataset.id", nullable=True, ondelete="CASCADE"
     )
@@ -94,8 +93,7 @@ class ValidationResultBase(SQLModel):
     value: int = Field(nullable=False)
     status: str | None = Field(max_length=64, nullable=True)
     reason: str | None = Field(max_length=255, nullable=True)
-    validation_id: UUID = Field(
-        foreign_key="validation.id", ondelete="CASCADE")
+    validation_id: UUID = Field(foreign_key="validation.id", ondelete="CASCADE")
     job_id: int | None = Field(foreign_key="job.id", nullable=True)
 
 
