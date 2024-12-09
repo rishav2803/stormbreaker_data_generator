@@ -19,9 +19,12 @@ COMMON_COLUMNS = [
 
 
 VALIDATIONS = [
-    "count_no_null",
-    "count_email",
-    "count_isin",
-    "max",
+    "min", 
+    "max", 
+    "avg", 
+    "sum", 
+    # "count_rows", 
+    # "count_null", 
+    # "count_empty"
 ]
 #add he new constants here

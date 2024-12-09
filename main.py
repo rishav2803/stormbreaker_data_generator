@@ -5,7 +5,10 @@ from app.generator.workspace_link_generator import create_workspace_link
 from app.generator.datasource_generator import create_datasource
 from app.generator.dataset_generator import create_dataset
 from app.generator.dataset_column_generator import create_data_set_columns
+from app.generator.validations_generator import create_validation
+from app.generator.validation_result_generator import create_validation_result
 from app.db.database import SessionLocal
+from app.generator.job_generator import create_job;
 
 
 def main():
@@ -67,14 +70,20 @@ def main():
         data_source_ids = create_datasource(
             session, workspace_id, user_id, num_sources)
 
-        dataset_ids = create_dataset(
+        dataset_details = create_dataset(
             session, num_data_sets, data_source_ids)
 
-        # create column
-        mapped_column_ids=create_data_set_columns(session,dataset_ids)
 
-        # create validations
-        # randomly select a mapped column id and perform validation
+        mapped_column_ids=create_data_set_columns(session,dataset_details)
+
+
+
+        all_validations=create_validation(session,mapped_column_ids,num_validations,user_id)
+
+        all_validation_jobs=create_job(session,all_tasks=all_validations,type="validation")
+
+        failed_validations=create_validation_result(session,all_validation_jobs)
+
         
 
         session.commit()

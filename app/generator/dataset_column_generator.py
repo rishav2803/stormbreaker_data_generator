@@ -5,22 +5,24 @@ from constants import COMMON_COLUMNS
 
 fake = Faker()
 
-def create_data_set_columns(session: Session, data_set_ids: list[str]) -> dict[str, list[str]]:
+def create_data_set_columns(session: Session, dataset_details: list[list[str]]) -> dict[str, list[list[str]]]:
     """
-    Creates columns for generated data sets and returns a mapping of data_set_id to column_ids.
+    Creates columns for generated data sets and returns a mapping of data_set_id to column details.
 
     Args:
         session (Session): SQLAlchemy session object.
         data_set_ids (list[str]): All the data set IDs created.
 
     Returns:
-        dict[str, list[str]]: A mapping of data_set_id to a list of column IDs.
+        dict[str, list[list[str]]]: A mapping of data_set_id to a list of [column_id, column_name].
     """
 
     data_set_to_columns = {}
 
-    for data_set_id in data_set_ids:
-        column_ids = []
+    for dataset_detail in dataset_details:
+        data_set_id, data_set_name = dataset_detail
+        combined_key = f"{data_set_id}/{data_set_name}"
+        column_details = []
         for col_name in COMMON_COLUMNS:
             column = Column(
                 column_name=col_name,
@@ -31,9 +33,8 @@ def create_data_set_columns(session: Session, data_set_ids: list[str]) -> dict[s
 
             session.add(column)
             session.flush()
-            column_ids.append(column.id)
+            column_details.append([column.id, col_name])
 
-        data_set_to_columns[data_set_id] = column_ids
+        data_set_to_columns[combined_key] = column_details
 
     return data_set_to_columns
-
