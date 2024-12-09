@@ -7,30 +7,33 @@ import faker
 fake = Faker()
 
 
-
-def create_dataset(session: Session, datasource_id: UserRole) -> str:
+def create_dataset(session: Session, num_datasets: int, data_source_ids: list[str]) -> list[str]:
     """
-    Generates and inserts random workspace data into the database.
+    Creates multiple datasets for a given data source and returns their IDs.
 
     Args:
         session (Session): SQLAlchemy session object.
-        user_id (str): ID of the user who owns the workspace.
-        user_role (UserRole): Role of the user.
+        num_datasets (int): Number of datasets to create.
+        data_source_ids: All the data source ids created
 
     Returns:
-        str: ID of the created workspace.
+        list[str]: List of IDs of the created datasets.
     """
+    dataset_ids = []
 
+    for data_source_id in data_source_ids:
+        for _ in range(num_datasets):
+            dataset_name = "testpublic." + fake.word()
 
-    datasetname="testpublic."+fake.word()
+            dataset = Dataset(
+                name=dataset_name,
+                metadata={},
+                data_source_id=data_source_id,
+            )
 
-    dataset = Dataset(
-        name=datasetname,
-        metadata={},
-        data_source_id=datasource_id,
-    )
+            session.add(dataset)
+            session.flush()  # Assigns an ID to the dataset
 
-    session.add(dataset)
-    session.flush()
+            dataset_ids.append(dataset.id)
 
-    return dataset.id
+    return dataset_ids
