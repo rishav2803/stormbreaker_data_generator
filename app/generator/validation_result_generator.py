@@ -4,6 +4,18 @@ import random
 
 
 def create_validation_result(session: Session, all_validation_jobs: dict[str, list[str]]) -> list[list[str]]:
+    """
+    Create Validations Result.
+
+    Args:
+        session (Session): SQLAlchemy session object.
+        all_validation_jobs (dict[str,list[str]]): Dict storing the mapping of validations and its multiple jobs.
+
+
+    Returns:
+        list[list[str]]: List of failed Jobs.
+    """
+
     failed_validation = []
     for validation, jobs in all_validation_jobs.items():
         for job in jobs:

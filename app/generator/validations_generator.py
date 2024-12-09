@@ -39,6 +39,19 @@ def build_configuration(dataset_name: str, selected_column_name: str, selected_v
 
 
 def create_validation(session: Session, mapped_column_ids: dict[str, list[list[str]]], num_validations: int, user_id: str) -> list[str]:
+    """
+    Create Validations.
+
+    Args:
+        session (Session): SQLAlchemy session object.
+        mapped_column_ids (dict[str,list[str]]): Dict storing the mapping of multiple data sets and their columns.
+        num_validations (int): Number of validations to perform.
+        user_id(str) : User id
+
+
+    Returns:
+        list[str]: List of validations ID's.
+    """
 
     validation_list = random.sample(range(0, 4), num_validations)
     validation_runs = 1
