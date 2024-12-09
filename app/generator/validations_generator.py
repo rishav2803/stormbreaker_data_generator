@@ -8,13 +8,13 @@ from constants import VALIDATIONS
 fake = Faker()
 
 
-def build_validation_name(dataset_name:str,selected_column_name:str,selected_validation)->str:
+def build_validation_name(dataset_name: str, selected_column_name: str, selected_validation) -> str:
     return f"{dataset_name} {selected_column_name} {selected_validation}"
 
 
-
-def build_configuration(dataset_name:str,selected_column_name:str,selected_validation):
-    validation_name=build_validation_name(dataset_name,selected_column_name,selected_validation)
+def build_configuration(dataset_name: str, selected_column_name: str, selected_validation):
+    validation_name = build_validation_name(
+        dataset_name, selected_column_name, selected_validation)
     return {
         "definition": {
             validation_name: {
@@ -37,23 +37,28 @@ def build_configuration(dataset_name:str,selected_column_name:str,selected_valid
         }
     }
 
-def create_validation(session: Session, mapped_column_ids: dict[str, list[list[str]]],num_validations:int,user_id:str)->list[str]:
 
-    validation_list=random.sample(range(0, 4),num_validations)
-    validation_runs=1
-    all_validations=[]
+def create_validation(session: Session, mapped_column_ids: dict[str, list[list[str]]], num_validations: int, user_id: str) -> list[str]:
 
-    for i in range(0,validation_runs):
-        selected_dataset_details = random.choice(list(mapped_column_ids.keys()))
+    validation_list = random.sample(range(0, 4), num_validations)
+    validation_runs = 1
+    all_validations = []
 
-        dataset_id,dataset_name=selected_dataset_details.split('/')
+    for i in range(0, validation_runs):
+        selected_dataset_details = random.choice(
+            list(mapped_column_ids.keys()))
 
-        selected_column_id,selected_column_name = random.choice(mapped_column_ids[selected_dataset_details])
-        
+        dataset_id, dataset_name = selected_dataset_details.split('/')
+
+        selected_column_id, selected_column_name = random.choice(
+            mapped_column_ids[selected_dataset_details])
+
         selected_validation = VALIDATIONS[random.choice(validation_list)]
-        configuration=build_configuration(dataset_name,selected_column_name,selected_validation)
-        validation_name=build_validation_name(dataset_name,selected_column_name,selected_validation)
-        validation=Validation(
+        configuration = build_configuration(
+            dataset_name, selected_column_name, selected_validation)
+        validation_name = build_validation_name(
+            dataset_name, selected_column_name, selected_validation)
+        validation = Validation(
             name=validation_name,
             configuration=configuration,
             type=selected_validation,
@@ -70,11 +75,3 @@ def create_validation(session: Session, mapped_column_ids: dict[str, list[list[s
         all_validations.append(validation.id)
 
     return all_validations
-
-
-
-    
-
-
-
-    # for i in range(0,validation_count):
