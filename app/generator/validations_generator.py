@@ -38,7 +38,7 @@ def build_configuration(dataset_name: str, selected_column_name: str, selected_v
     }
 
 
-def create_validation(session: Session, mapped_column_ids: dict[str, list[list[str]]], num_validations: int, user_id: str) -> list[str]:
+def create_validation(session: Session, mapped_column_ids: dict[str, list[list[str]]], num_validations: int, user_id: str) -> list[list[str]]:
     """
     Create Validations.
 
@@ -85,6 +85,6 @@ def create_validation(session: Session, mapped_column_ids: dict[str, list[list[s
 
         session.add(validation)
         session.flush()
-        all_validations.append(validation.id)
+        all_validations.append([validation.id,validation.name])
 
     return all_validations

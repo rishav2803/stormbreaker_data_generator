@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from app.models.job_model import Job
 
 
-def create_job(session: Session, all_tasks: list[str], type: str) -> dict[str, list[str]]:
+def create_job(session: Session, all_tasks: list[list[str]], type: str) -> dict[str, list[str]]:
     """
     Creates multiple jobs for each task and maps task IDs to their respective job IDs.
 
@@ -18,12 +18,13 @@ def create_job(session: Session, all_tasks: list[str], type: str) -> dict[str, l
     """
     task_to_jobs = {}
 
-    for task_id in all_tasks:
+    for task_id,task_name in all_tasks:
         # randomly get number of jobs between 30 to 40
         no_of_jobs = random.randint(30, 40)
 
         # no_of_jobs = 2
         job_ids = []
+        combined_key=f"{task_id}/{task_name}"
 
         for _ in range(no_of_jobs):
             name = ''.join(random.choices(string.ascii_lowercase, k=4))
@@ -42,7 +43,7 @@ def create_job(session: Session, all_tasks: list[str], type: str) -> dict[str, l
 
             job_ids.append(job.id)
 
-        task_to_jobs[task_id] = job_ids
+        task_to_jobs[combined_key] = job_ids
 
     return task_to_jobs
 

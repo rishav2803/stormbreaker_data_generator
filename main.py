@@ -7,6 +7,8 @@ from app.generator.dataset_generator import create_dataset
 from app.generator.dataset_column_generator import create_data_set_columns
 from app.generator.validations_generator import create_validation
 from app.generator.validation_result_generator import create_validation_result
+from app.generator.alert_group_generator import create_alert_group
+from app.generator.alerts_generator import create_alerts
 from app.db.database import SessionLocal
 from app.generator.job_generator import create_job
 
@@ -82,6 +84,10 @@ def main():
         failed_validations = create_validation_result(
             session, all_validation_jobs
         )
+        mapped_alertgroup_to_alerts=create_alert_group(
+            session,failed_jobs=failed_validations
+        )
+        create_alerts(session,mapped_alertgroup_to_alerts)
 
         session.commit()
         print("Data Generated Successfully!")

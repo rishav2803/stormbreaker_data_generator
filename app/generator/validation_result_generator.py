@@ -3,7 +3,7 @@ from app.models.validation_model import ValidationResult
 import random
 
 
-def create_validation_result(session: Session, all_validation_jobs: dict[str, list[str]]) -> list[list[str]]:
+def create_validation_result(session: Session, all_validation_jobs: dict[str, list[str]]) -> dict[str, list[str]]:
     """
     Create Validations Result.
 
@@ -13,13 +13,16 @@ def create_validation_result(session: Session, all_validation_jobs: dict[str, li
 
 
     Returns:
-        list[list[str]]: List of failed Jobs.
+        dict[str, list[str]]: Dictionary of failed validations with validation key and list of failed job_ids.
     """
 
-    failed_validation = []
+    failed_validation = {}
     for validation, jobs in all_validation_jobs.items():
+        validation_id, validation_name = validation.split('/')
+        validation_key = f"{validation_id}/{validation_name}"
+        
         for job in jobs:
-            job_id, validation_id = job, validation
+            job_id = job
             reason = ""
             status = random.randint(0, 1)
             value = random.randint(100, 10000)
@@ -33,6 +36,10 @@ def create_validation_result(session: Session, all_validation_jobs: dict[str, li
             )
             session.add(validation_result)
             session.flush()
+            
             if status == 0:
-                failed_validation.append([validation_id, job_id])
+                if validation_key not in failed_validation:
+                    failed_validation[validation_key] = []
+                failed_validation[validation_key].append(job_id)
+    
     return failed_validation
