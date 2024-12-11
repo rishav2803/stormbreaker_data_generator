@@ -23,7 +23,7 @@ def create_user(session: Session) -> Tuple[str, UserRole]:
         provider=ProviderType.EMAIL,
         role=UserRole.ADMIN,
         status=UserStatus.ACTIVE,
-        password=fake.password(length=12),
+        password="$2b$12$Pd69TpQ9t7299vnyDZ0.deOgdf8bOVaHa37bmv8ZSwFaS5WzriUxW",
     )
     session.add(user)
 
